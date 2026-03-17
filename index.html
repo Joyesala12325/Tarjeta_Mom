@@ -1,0 +1,149 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>¡Feliz Cumpleaños Mamá!</title>
+    <!-- Tailwind CSS para los estilos -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <!-- React y Babel para ejecutar JSX en el navegador -->
+    <script src="https://unpkg.com/react@18/umd/react.development.js"></script>
+    <script src="https://unpkg.com/react-dom@18/umd/react-dom.development.js"></script>
+    <script src="https://unpkg.com/@babel/standalone/babel.min.js"></script>
+    <!-- Lucide Icons -->
+    <script src="https://unpkg.com/lucide@latest"></script>
+    <style>
+        @keyframes slow-spin {
+            from { transform: rotate(0deg); }
+            to { transform: rotate(360deg); }
+        }
+        .animate-spin-slow {
+            animation: slow-spin 8s linear infinite;
+        }
+    </style>
+</head>
+<body>
+    <div id="root"></div>
+
+    <script type="text/babel">
+        const { useState, useEffect } = React;
+        
+        // Iconos de Lucide adaptados para uso directo en el navegador
+        const Heart = ({ size = 24, className = "" }) => <i data-lucide="heart" className={className} style={{ width: size, height: size }}></i>;
+        const Stars = ({ size = 24, className = "" }) => <i data-lucide="stars" className={className} style={{ width: size, height: size }}></i>;
+        const Gift = ({ size = 24, className = "" }) => <i data-lucide="gift" className={className} style={{ width: size, height: size }}></i>;
+        const Music = ({ size = 24, className = "" }) => <i data-lucide="music" className={className} style={{ width: size, height: size }}></i>;
+        const Sparkles = ({ size = 24, className = "" }) => <i data-lucide="sparkles" className={className} style={{ width: size, height: size }}></i>;
+
+        const App = () => {
+            const [isOpen, setIsOpen] = useState(false);
+            const [showConfetti, setShowConfetti] = useState(false);
+
+            useEffect(() => {
+                // Inicializar iconos después de cada renderizado
+                if (window.lucide) {
+                    window.lucide.createIcons();
+                }
+            }, [isOpen]);
+
+            const Confetti = () => (
+                <div className="absolute inset-0 overflow-hidden pointer-events-none">
+                    {[...Array(20)].map((_, i) => (
+                        <div
+                            key={i}
+                            className="absolute animate-bounce"
+                            style={{
+                                left: `${Math.random() * 100}%`,
+                                top: `${Math.random() * 100}%`,
+                                animationDelay: `${Math.random() * 2}s`,
+                                opacity: 0.6
+                            }}
+                        >
+                            <div className="text-yellow-400">
+                                <i data-lucide="sparkles" style={{ width: Math.random() * 20 + 10 }}></i>
+                            </div>
+                        </div>
+                    ))}
+                </div>
+            );
+
+            return (
+                <div className="min-h-screen bg-rose-50 flex items-center justify-center p-4 font-sans">
+                    {!isOpen ? (
+                        <div 
+                            onClick={() => {setIsOpen(true); setShowConfetti(true);}}
+                            className="cursor-pointer group relative bg-white p-8 rounded-2xl shadow-2xl border-2 border-rose-200 transform transition-all hover:scale-105 hover:rotate-1"
+                        >
+                            <div className="flex flex-col items-center gap-4">
+                                <div className="bg-rose-100 p-6 rounded-full group-hover:bg-rose-200 transition-colors">
+                                    <Gift size={48} className="text-rose-500" />
+                                </div>
+                                <h2 className="text-2xl font-serif text-rose-800 font-bold text-center">
+                                    Para la mejor mamá del mundo
+                                </h2>
+                                <p className="text-rose-600 animate-pulse text-center">Toca para abrir tu sorpresa ✨</p>
+                            </div>
+                        </div>
+                    ) : (
+                        <div className="max-w-md w-full bg-white rounded-3xl shadow-2xl overflow-hidden relative border border-rose-100 animate-in fade-in zoom-in duration-700">
+                            {showConfetti && <Confetti />}
+                            
+                            <div className="relative h-80 overflow-hidden bg-gray-200">
+                                {/* IMPORTANTE: Reemplaza esta URL con el enlace de tu foto subida */}
+                                <img 
+                                    src="https://images.unsplash.com/photo-1544333346-64e4fe1820af?q=80&w=1000" 
+                                    alt="Mamá"
+                                    className="w-full h-full object-cover"
+                                />
+                                <div className="absolute inset-0 bg-gradient-to-t from-black/60 to-transparent flex items-end p-6">
+                                    <h1 className="text-white text-3xl font-serif font-bold italic">
+                                        ¡Feliz Cumpleaños, Mamá!
+                                    </h1>
+                                </div>
+                            </div>
+
+                            <div className="p-8 space-y-6 text-center">
+                                <div className="flex justify-center gap-2 text-rose-500">
+                                    <i data-lucide="heart" className="fill-current"></i>
+                                    <i data-lucide="heart" className="fill-current"></i>
+                                    <i data-lucide="heart" className="fill-current"></i>
+                                </div>
+
+                                <div className="space-y-4">
+                                    <p className="text-gray-700 text-lg leading-relaxed">
+                                        Gracias por ser mi guía, mi apoyo incondicional y por celebrar conmigo cada logro.
+                                    </p>
+                                    <p className="text-rose-700 font-medium text-xl italic">
+                                        "Tu amor es el regalo más grande que la vida me ha dado."
+                                    </p>
+                                    <p className="text-gray-600 italic">
+                                        Hoy celebro tu vida y agradezco tenerte a mi lado siempre.
+                                    </p>
+                                </div>
+
+                                <div className="pt-6 border-t border-rose-50 flex flex-col items-center">
+                                    <div className="bg-rose-50 px-6 py-2 rounded-full inline-flex items-center gap-2 mb-4">
+                                        <Stars size={18} className="text-yellow-500" />
+                                        <span className="text-rose-800 font-semibold uppercase tracking-widest text-sm">Te quiero mucho</span>
+                                        <Stars size={18} className="text-yellow-500" />
+                                    </div>
+                                    
+                                    <button 
+                                        onClick={() => setIsOpen(false)}
+                                        className="text-gray-400 hover:text-rose-500 transition-colors text-xs underline"
+                                    >
+                                        Cerrar tarjeta
+                                    </button>
+                                </div>
+                            </div>
+                        </div>
+                    )}
+                </div>
+            );
+        };
+
+        const root = ReactDOM.createRoot(document.getElementById('root'));
+        root.render(<App />);
+    </script>
+</body>
+</html>
