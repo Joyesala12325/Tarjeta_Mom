@@ -1,0 +1,199 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>¡Feliz Cumpleaños Mamá!</title>
+    <!-- Tailwind CSS para los estilos -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <!-- React y Babel para ejecutar JSX en el navegador -->
+    <script src="https://unpkg.com/react@18/umd/react.development.js"></script>
+    <script src="https://unpkg.com/react-dom@18/umd/react-dom.development.js"></script>
+    <script src="https://unpkg.com/@babel/standalone/babel.min.js"></script>
+    <!-- Lucide Icons -->
+    <script src="https://unpkg.com/lucide@latest"></script>
+    <style>
+        @keyframes slow-spin {
+            from { transform: rotate(0deg); }
+            to { transform: rotate(360deg); }
+        }
+        .animate-spin-slow {
+            animation: slow-spin 8s linear infinite;
+        }
+        
+        /* Animación de confeti hacia arriba */
+        @keyframes confetti-rise {
+            0% {
+                transform: translateY(100vh) translateX(0) rotate(0deg);
+                opacity: 1;
+            }
+            100% {
+                transform: translateY(-20vh) translateX(var(--drift)) rotate(360deg);
+                opacity: 0;
+            }
+        }
+        .confetti-piece {
+            position: absolute;
+            bottom: -50px;
+            width: 12px;
+            height: 12px;
+            animation: confetti-rise var(--duration) ease-out forwards;
+        }
+    </style>
+</head>
+<body>
+    <div id="root"></div>
+
+    <script type="text/babel">
+        const { useState, useEffect, useRef } = React;
+        
+        const Heart = ({ size = 24, className = "" }) => <i data-lucide="heart" className={className} style={{ width: size, height: size }}></i>;
+        const Stars = ({ size = 24, className = "" }) => <i data-lucide="stars" className={className} style={{ width: size, height: size }}></i>;
+        const Gift = ({ size = 24, className = "" }) => <i data-lucide="gift" className={className} style={{ width: size, height: size }}></i>;
+        const Music = ({ size = 24, className = "" }) => <i data-lucide="music" className={className} style={{ width: size, height: size }}></i>;
+        const Sparkles = ({ size = 24, className = "" }) => <i data-lucide="sparkles" className={className} style={{ width: size, height: size }}></i>;
+
+        const App = () => {
+            const [isOpen, setIsOpen] = useState(false);
+            const audioRef = useRef(null);
+
+            useEffect(() => {
+                if (window.lucide) {
+                    window.lucide.createIcons();
+                }
+            }, [isOpen]);
+
+            const handleOpen = () => {
+                setIsOpen(true);
+                // Reproducir audio al interactuar
+                if (audioRef.current) {
+                    audioRef.current.play().catch(err => console.log("Audio play blocked", err));
+                }
+            };
+
+            const ConfettiCanon = () => {
+                const colors = ['#f43f5e', '#fbbf24', '#3b82f6', '#10b981', '#a855f7'];
+                return (
+                    <div className="fixed inset-0 pointer-events-none z-50 overflow-hidden">
+                        {[...Array(50)].map((_, i) => {
+                            const color = colors[Math.floor(Math.random() * colors.length)];
+                            const duration = 2 + Math.random() * 3;
+                            const left = Math.random() * 100;
+                            const drift = (Math.random() - 0.5) * 200; // Desplazamiento lateral
+                            return (
+                                <div
+                                    key={i}
+                                    className="confetti-piece"
+                                    style={{
+                                        left: `${left}%`,
+                                        backgroundColor: color,
+                                        '--duration': `${duration}s`,
+                                        '--drift': `${drift}px`,
+                                        borderRadius: Math.random() > 0.5 ? '50%' : '2px',
+                                        animationDelay: `${Math.random() * 0.5}s`
+                                    }}
+                                />
+                            );
+                        })}
+                    </div>
+                );
+            };
+
+            return (
+                <div className="min-h-screen bg-rose-50 flex items-center justify-center p-4 font-sans overflow-hidden">
+                    {/* Elemento de Audio - Asegúrate de tener musica.mp3 en tu carpeta */}
+                    <audio ref={audioRef} loop>
+                        <source src="Happy Birthday_267439116 - Xeno Sound.mp3" type="audio/mpeg" />
+                        Tu navegador no soporta el audio.
+                    </audio>
+
+                    {!isOpen ? (
+                        <div 
+                            onClick={handleOpen}
+                            className="cursor-pointer group relative bg-white p-10 rounded-3xl shadow-2xl border-2 border-rose-200 transform transition-all hover:scale-105 active:scale-95"
+                        >
+                            <div className="flex flex-col items-center gap-6">
+                                <div className="bg-rose-100 p-8 rounded-full group-hover:bg-rose-200 transition-colors animate-bounce">
+                                    <Gift size={64} className="text-rose-500" />
+                                </div>
+                                <div className="text-center">
+                                    <h2 className="text-3xl font-serif text-rose-800 font-bold mb-2">
+                                        ¡Una sorpresa para ti!
+                                    </h2>
+                                    <p className="text-rose-600 font-medium">Toca el regalo para abrir! ✨</p>
+                                </div>
+                            </div>
+                        </div>
+                    ) : (
+                        <div className="max-w-md w-full bg-white rounded-3xl shadow-2xl overflow-hidden relative border border-rose-100 animate-in fade-in zoom-in duration-700">
+                            <ConfettiCanon />
+                            
+                            <div className="relative h-80 overflow-hidden bg-rose-100">
+                                {/* Pon aquí el nombre de tu archivo de imagen */}
+                                <img 
+                                    src="WhatsApp Image 2026-03-17 at 9.10.40 AM.jpeg" 
+                                    alt="Foto con Mamá"
+                                    className="w-full h-full object-cover"
+                                    onError={(e) => {
+                                        e.target.src = "https://i.pinimg.com/736x/0d/29/56/0d2956171267c71486866ad041bdaa8a.jpg";
+                                    }}
+                                />
+                                <div className="absolute inset-0 bg-gradient-to-t from-black/70 via-transparent to-transparent flex items-end p-6">
+                                    <h1 className="text-white text-3xl font-serif font-bold italic drop-shadow-lg">
+                                        ¡Feliz Cumpleaños Mita!
+                                    </h1>
+                                </div>
+                            </div>
+
+                            <div className="p-8 space-y-6 text-center">
+                                <div className="flex justify-center gap-3 text-rose-500">
+                                    <Heart size={20} className="fill-current animate-pulse" />
+                                    <Heart size={24} className="fill-current animate-pulse" style={{animationDelay: '0.2s'}} />
+                                    <Heart size={20} className="fill-current animate-pulse" style={{animationDelay: '0.4s'}} />
+                                </div>
+
+                                <div className="space-y-4">
+                                    <p className="text-gray-700 text-lg leading-relaxed">
+                                        Gracias por ser mi guía, mi apoyo incondicional y por estar conmigo cada paso del camino.
+                                    </p>
+                                    <div className="py-2">
+                                        <p className="text-rose-700 font-serif font-bold text-2xl italic">
+                                            "Tu amor y tu compañía es el regalo más grande."
+                                        </p>
+                                    </div>
+                                    <p className="text-gray-600 italic">
+                                        Hoy celebramos tu vida. ¡Te mereces todo lo mejor hoy y siempre!
+                                    </p>
+                                </div>
+
+                                <div className="pt-6 border-t border-rose-50 flex flex-col items-center">
+                                    <div className="bg-rose-50 px-8 py-3 rounded-full inline-flex items-center gap-3 mb-6 shadow-sm">
+                                        <Stars size={20} className="text-yellow-500" />
+                                        <span className="text-rose-800 font-bold uppercase tracking-widest text-sm">Feliz cumpleaños! 💋</span>
+                                        <Stars size={20} className="text-yellow-500" />
+                                    </div>
+                                    
+                                    <button 
+                                        onClick={() => setIsOpen(false)}
+                                        className="text-gray-400 hover:text-rose-500 transition-colors text-xs underline"
+                                    >
+                                        Volver a cerrar
+                                    </button>
+                                </div>
+                            </div>
+                            
+                            {/* Icono de música flotante indicando que suena */}
+                            <div className="absolute top-4 right-4 bg-white/30 backdrop-blur-md p-2 rounded-full border border-white/50">
+                                <Music className="text-white animate-spin-slow" size={20} />
+                            </div>
+                        </div>
+                    )}
+                </div>
+            );
+        };
+
+        const root = ReactDOM.createRoot(document.getElementById('root'));
+        root.render(<App />);
+    </script>
+</body>
+</html>
